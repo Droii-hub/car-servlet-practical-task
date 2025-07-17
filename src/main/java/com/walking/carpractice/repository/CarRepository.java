@@ -74,14 +74,13 @@ public class CarRepository {
         }
     }
 
-    public Car delete(Car car){
+    public void delete(CarIdentifier carIdentifier){
         String sql="delete from car where creation_year=? and number=?";
         try(Connection connection=dataSource.getConnection();
             PreparedStatement statement=connection.prepareStatement(sql)){
-                statement.setInt(1, car.getIdentifier().getYear());
-                statement.setString(2, car.getIdentifier().getNumber());
+                statement.setInt(1, carIdentifier.getYear());
+                statement.setString(2, carIdentifier.getNumber());
                 statement.executeUpdate();
-                return car;
         } catch (SQLException e){
             log.error(e.getMessage());
             throw new RuntimeException(e.getMessage());

@@ -1,5 +1,6 @@
 package com.walking.carpractice;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.walking.carpractice.service.CarService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -31,6 +32,7 @@ public class InitParamsListener implements ServletContextListener {
         flyway.migrate();
         context.setAttribute("dbConnection", dataSource);
         context.setAttribute("carService", CarService.getInstance(dataSource));
+        context.setAttribute("objectMapper", new ObjectMapper());
     }
 
     private Properties getHikariProperties(ServletContext context){
