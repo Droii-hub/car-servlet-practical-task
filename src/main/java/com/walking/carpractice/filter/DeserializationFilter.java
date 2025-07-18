@@ -3,6 +3,7 @@ package com.walking.carpractice.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.walking.carpractice.model.Car;
 import com.walking.carpractice.model.CarIdentifier;
+import com.walking.carpractice.model.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpFilter;
@@ -55,6 +56,12 @@ public class DeserializationFilter extends HttpFilter {
             return CarIdentifier.class;
         if (path.equals("/car")&method.equals("DELETE"))
             return CarIdentifier.class;
+        if (path.equals("/registration")&method.equals("POST"))
+            return User.class;
+        if (path.equals("/login")&method.equals("POST"))
+            return User.class;
+        if (path.equals("/user")&method.equals("PATCH"))
+            return User.class;
 
         throw new RuntimeException("Unsupported path or method");
     }

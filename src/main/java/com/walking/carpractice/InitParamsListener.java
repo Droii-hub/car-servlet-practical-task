@@ -2,6 +2,7 @@ package com.walking.carpractice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.walking.carpractice.service.CarService;
+import com.walking.carpractice.service.UserService;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import jakarta.servlet.ServletContext;
@@ -21,18 +22,23 @@ public class InitParamsListener implements ServletContextListener {
     private final String HIKARI_PATH="/WEB-INF/hikari.properties";
     @Override
     public void contextInitialized(ServletContextEvent event){
-        ServletContext context=event.getServletContext();
-        HikariConfig config=new HikariConfig(getHikariProperties(context));
+        try {
+            ServletContext context = event.getServletContext();
+            HikariConfig config = new HikariConfig(getHikariProperties(context));
 
-        HikariDataSource dataSource=new HikariDataSource(config);
+            HikariDataSource dataSource = new HikariDataSource(config);
 
-        FluentConfiguration flywayConfiguration= Flyway.configure()
-                .dataSource(dataSource).baselineOnMigrate(true);
-        Flyway flyway=flywayConfiguration.load();
-        flyway.migrate();
-        context.setAttribute("dbConnection", dataSource);
-        context.setAttribute("carService", CarService.getInstance(dataSource));
-        context.setAttribute("objectMapper", new ObjectMapper());
+            FluentConfiguration flywayConfiguration = Flyway.configure()
+                    .dataSource(dataSource).baselineOnMigrate(true);
+            Flyway flyway = flywayConfiguration.load();
+            flyway.migrate();
+            context.setAttribute("dbConnection", dataSource);
+            context.setAttribute("carService", CarService.getInstance(dataSource));
+            context.setAttribute("userService", UserService.getInstance(dataSource));
+            context.setAttribute("objectMapper", new ObjectMapper());
+        } catch (Exception e){
+            log.error(e.getMessage());
+        }
     }
 
     private Properties getHikariProperties(ServletContext context){
