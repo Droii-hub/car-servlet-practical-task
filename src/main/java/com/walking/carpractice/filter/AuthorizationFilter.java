@@ -12,7 +12,8 @@ import java.io.IOException;
 public class AuthorizationFilter extends HttpFilter {
     @Override
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        if ("/login".equals(request.getServletPath())|"/registration".equals(request.getServletPath())) {
+        if ("/login".equals(request.getServletPath())|"/registration".equals(request.getServletPath())
+        |"/auth".equals(request.getServletPath())) {
             // Если запрос на логин - пускаем дальше по цепочке без дополнительных проверок
             chain.doFilter(request, response);
             return;
@@ -20,7 +21,7 @@ public class AuthorizationFilter extends HttpFilter {
         // Получаем объект сессии. Если сессии не существует - отправляем ошибку.
         HttpSession session = request.getSession(false);
         if (session == null) {
-            response.sendError(401);
+            response.sendRedirect("./login");
             return;
         }
         chain.doFilter(request,response);

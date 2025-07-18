@@ -36,4 +36,12 @@
                 <filter-name>AuthorizationFilter</filter-name>
                 <url-pattern>/*</url-pattern>
         </filter-mapping>
+        <servlet>
+                <servlet-name>LoginJsp</servlet-name>
+                <jsp-file>/Login.jsp</jsp-file>
+        </servlet>
+        <servlet-mapping>
+                <servlet-name>LoginJsp</servlet-name>
+                <url-pattern>/login</url-pattern>
+        </servlet-mapping>
 </web-app>

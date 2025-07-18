@@ -15,7 +15,7 @@ public class LogoutServlet extends HttpServlet {
         HttpSession httpSession= req.getSession(false);
         if (httpSession!=null) {
             httpSession.invalidate();
-            resp.setStatus(200);
         }
+        resp.sendRedirect("./login");
     }
 }
