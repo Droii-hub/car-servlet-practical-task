@@ -1,6 +1,8 @@
 package com.walking.carpractice.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.walking.carpractice.ApplicationException;
+import com.walking.carpractice.ErrorCode;
 import com.walking.carpractice.model.Car;
 import com.walking.carpractice.model.CarIdentifier;
 import com.walking.carpractice.model.User;
@@ -32,11 +34,16 @@ public class DeserializationFilter extends HttpFilter {
         // Получаем тело как массив байт. Jackson умеет работать и с InputStream,
         // но данный подход нагляднее для демонстарции
         byte[] jsonBody = req.getInputStream().readAllBytes();
-        // Получаем целевой тип через отдельный метод. Как он работает на самом деле - не важно в рамках примера
-        Class<?> targetType = getTargetType(req);
+        Object pojoBody;
+        try {
+            // Получаем целевой тип через отдельный метод. Как он работает на самом деле - не важно в рамках примера
+            Class<?> targetType = getTargetType(req);
 
-        // Десериализуем JSON. Допустим, что ObjectMapper представлен полем и инициализирован через init()
-        Object pojoBody =  objectMapper.readValue(jsonBody, targetType);
+            // Десериализуем JSON. Допустим, что ObjectMapper представлен полем и инициализирован через init()
+            pojoBody = objectMapper.readValue(jsonBody, targetType);
+        } catch (Exception e) {
+            throw new ApplicationException(ErrorCode.WRONG_REQUEST, e);
+        }
         // Добавляем полученный Java-объект в атрибуты запроса для дальнейшего поулчения в сервлете
         req.setAttribute("pojoRequestBody", pojoBody);
 
